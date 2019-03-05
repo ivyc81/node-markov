@@ -44,22 +44,28 @@ class MarkovMachine {
       let sentence = "";
       const chainOfWords = this.makeChains();
       var keys = Object.keys(chainOfWords);
-      let randomStartWord = keys[Math.floor(keys.length * Math.random())];
+      let randomStartWord = makeRandom(keys);
       let word = randomStartWord;
       sentence += randomStartWord;
       for (let i = 1; i < numWords; i++){
         let nextWordOptions = chainOfWords[word];
-        let nextWord = nextWordOptions[Math.floor(nextWordOptions.length *                                        Math.random())];
+        let nextWord = makeRandom(nextWordOptions);
         if (nextWord === null){
           return sentence;
         }
         else{
-           word = nextWord;
+          word = nextWord;
           sentence += ` ${word}`;
         }
       }
       return sentence;
   }
+}
+
+// Return random element in the array
+function makeRandom(array){
+
+  return array[Math.floor(array.length *Math.random())];
 }
 
 module.exports = { MarkovMachine };
