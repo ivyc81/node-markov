@@ -35,13 +35,30 @@ class MarkovMachine {
       }
     }
     return chainOfWords;
-
+  }
 
     /** return random text from chains */
 
-    // makeText(numWords = 100) {
-    //   // TODO
-    // }
+  makeText(numWords = 100) {
+      // TODO
+      let sentence = "";
+      const chainOfWords = this.makeChains();
+      var keys = Object.keys(chainOfWords);
+      let randomStartWord = keys[Math.floor(keys.length * Math.random())];
+      let word = randomStartWord;
+      sentence += randomStartWord;
+      for (let i = 1; i < numWords; i++){
+        let nextWordOptions = chainOfWords[word];
+        let nextWord = nextWordOptions[Math.floor(nextWordOptions.length *                                        Math.random())];
+        if (nextWord === null){
+          return sentence;
+        }
+        else{
+           word = nextWord;
+          sentence += ` ${word}`;
+        }
+      }
+      return sentence;
   }
 }
 
