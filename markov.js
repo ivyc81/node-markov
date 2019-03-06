@@ -7,7 +7,7 @@ class MarkovMachine {
 
   constructor(text) {
     let words = text.split(/[ \r\n]+/);
-    this.words = words.filter(c => c !== "").map(w => w.toLowerCase());
+    this.words = words.filter(c => c !== "");
     this.makeChains();
   }
 
@@ -37,16 +37,56 @@ class MarkovMachine {
     return chainOfWords;
   }
 
+  makeBigramChains() {
+    // TODO
+
+    const setOfWords = new Set();
+    for(let i = 0; i < this.words.length - 1; i++){
+      setOfWords.add(`${this.words[i]} ${this.words[i+1]}`)
+    }
+    const chainOfWords = {};
+
+    for (let words of setOfWords) {
+      chainOfWords[words] = [];
+
+      let index = 0;
+
+      let twoWordArr = words.split(' ');
+      // let indexFirst = this.words.indexOf(twoWordArr[0], index);
+      let indexSecond = this.words.indexOf(twoWordArr[1], index);
+
+      // let followingWordIndex;
+
+      while (indexSecond !== -1) {
+        if(this.words[indexSecond-1] === twoWordArr[0]){
+          chainOfWords[words].push(this.words[indexSecond + 1] || null);
+        }
+        index = indexSecond + 1;
+        indexSecond = this.words.indexOf(twoWordArr[1], index);
+      }
+    }
+    return chainOfWords;
+  }
+
+
+
     /** return random text from chains */
 
   makeText(numWords = 100) {
       // TODO
       let sentence = "";
-      const chainOfWords = this.makeChains();
+      // const chainOfWords = this.makeChains();
+      const chainOfWords = this.makeBigramChains();
       var keys = Object.keys(chainOfWords);
-      let randomStartWord = makeRandom(keys);
+      let randomStartWord;
+
+      do{
+        randomStartWord = makeRandom(keys);
+      } while(randomStartWord[0].toUpperCase() !== randomStartWord[0])
+
       let word = randomStartWord;
       sentence += randomStartWord;
+      // let previousWord;
       for (let i = 1; i < numWords; i++){
         let nextWordOptions = chainOfWords[word];
         let nextWord = makeRandom(nextWordOptions);
@@ -54,8 +94,8 @@ class MarkovMachine {
           return sentence;
         }
         else{
-          word = nextWord;
-          sentence += ` ${word}`;
+          sentence += ` ${nextWord}`;
+          word = `${word.split(' ')[1]} ${nextWord}`;
         }
       }
       return sentence;

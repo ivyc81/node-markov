@@ -23,20 +23,22 @@ describe("createMarkovMachine", function(){
         let chainOfWords = testInstance.makeChains();
 
         let sentence = testInstance.makeText();
-        let sentence2 = testInstance.makeText(5);
-        
+        let sentence2 = testInstance.makeText(1);
+
         let senArr = sentence.split(' ');
         let senArr2 = sentence2.split(' ');
 
         expect(senArr.every(w => chainOfWords.hasOwnProperty(w))).toBe(true);
         if (senArr.length !== 1){
             expect(chainOfWords[senArr[0]].indexOf(senArr[1]) !== -1).toBe(true);
-        } 
+        }
         else {
             expect(chainOfWords[senArr[0]]).toContain(null);
         }
-        expect(senArr2.length <= 5).toBe(true);
+        expect(senArr2.length <= 1).toBe(true);
+        expect(typeof(sentence)).toBe('string');
+        if(senArr2.length === 1){
+            expect(senArr2).toEqual(expect.not.arrayContaining(['day']));
+        }
     })
-
-    
 })
